@@ -19,9 +19,7 @@ public abstract class Soket {
 	public void uspostaviVeze() {
 		try {
 			ulazniTok = new BufferedReader(new InputStreamReader(soket.getInputStream()));
-			System.out.println("Ulaz uspostavljen");
 			izlazniTok = new PrintStream(soket.getOutputStream());
-			System.out.println("Izlaz uspostavljen");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -23,29 +23,25 @@ public class ServerSoket extends Soket implements Runnable {
 		this.soketZaOsluskivanje=soketZaOsluskivanje;
 		t = new Thread(this);
 		t.setDaemon(true);
-		System.out.println("tu sam");
 		t.start();	
-		System.out.println("tu sam");
 	}
 
 	@Override
-	public synchronized void run() {
+	public void run() {
 		try {
 			while (true) {
-				System.out.println("eo me");
-				wait(2000);
-				System.out.println("Sto me zajebavas");
-				System.out.println(ulazniTok.toString());
-				System.out.println(izlazniTok.toString());
-				String komanda = ulazniTok.readLine();
-				System.out.println("prosa sam");
-				System.out.println(komanda);
+				
+				
+				String  komanda = ulazniTok.readLine();
+				
 				if(KRAJ.equals(komanda)){
 					zatvoriSoket();
 				}
-				if (!dozvoljenaOperacija(komanda))
+				if (!dozvoljenaOperacija(komanda)){
+								izlazniTok.println("ne moze");
 												continue;
-				System.out.println("zezanje");
+				}
+				
 				izlazniTok.println("moze");
 				Socket soketZaPodatke = soketZaOsluskivanje.accept();
 				PodaciSoket podaci = new PodaciSoket(soketZaPodatke, komanda);
@@ -54,10 +50,7 @@ public class ServerSoket extends Soket implements Runnable {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 
 	}
 
