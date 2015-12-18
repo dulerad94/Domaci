@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -46,7 +45,8 @@ public class ServerSoket extends Soket implements Runnable {
 				}
 				if (!dozvoljenaOperacija(komanda))
 												continue;
-				izlazniTok.writeUTF("moze\n");
+				System.out.println("zezanje");
+				izlazniTok.println("moze");
 				Socket soketZaPodatke = soketZaOsluskivanje.accept();
 				PodaciSoket podaci = new PodaciSoket(soketZaPodatke, komanda);
 				podaci.run();

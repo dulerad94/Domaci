@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -36,6 +35,7 @@ public class PodaciSoket extends Soket {
 	}
 
 	private void ucitajBrojeve(String[] podaci) {
+		brojevi=new double[podaci.length];
 		for (int i = 0; i < podaci.length; i++) {
 			brojevi[i]=Double.parseDouble(podaci[i]);
 		}
@@ -89,7 +89,7 @@ public class PodaciSoket extends Soket {
 			String[] br=ulazniTok.readLine().split(" ");
 			if(dobarUlaz(br)) ucitajBrojeve(br);
 			double rezultat=izracunaj();
-			izlazniTok.writeUTF(rezultat+"");		
+			izlazniTok.println(rezultat+"");		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

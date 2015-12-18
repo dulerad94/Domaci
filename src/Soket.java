@@ -2,12 +2,13 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.Socket;
 
 public abstract class Soket {
 	protected Socket soket;
 	protected BufferedReader ulazniTok;
-	protected DataOutputStream izlazniTok;
+	protected PrintStream izlazniTok;
 	
 	
 	public Soket(Socket soket) {
@@ -19,7 +20,7 @@ public abstract class Soket {
 		try {
 			ulazniTok = new BufferedReader(new InputStreamReader(soket.getInputStream()));
 			System.out.println("Ulaz uspostavljen");
-			izlazniTok = new DataOutputStream(soket.getOutputStream());
+			izlazniTok = new PrintStream(soket.getOutputStream());
 			System.out.println("Izlaz uspostavljen");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
