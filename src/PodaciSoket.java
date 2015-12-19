@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.Socket;
 
+import javax.management.RuntimeErrorException;
+
 public class PodaciSoket extends Soket {
 	private String operacija;
 	private double brojevi[];
@@ -14,10 +16,11 @@ public class PodaciSoket extends Soket {
 
 	private boolean ucitajPodatke() {
 		try {
-			String[] podaci = ulazniTok.readLine().split(" ");
+			String izraz = ulazniTok.readLine();
+			String[] podaci = srediIzraz(izraz);
 			if (dobarUlaz(podaci)) {
 				ucitajBrojeve(podaci);
-			}else{
+			} else {
 				izlazniTok.println("Molimo vas unesite brojeve");
 				return false;
 			}
@@ -96,10 +99,38 @@ public class PodaciSoket extends Soket {
 	}
 
 	public void odradiOperaciju() {
-		if(ucitajPodatke()&& izracunaj())
+		if (ucitajPodatke() && izracunaj())
 			izlazniTok.println(rezultat);
 		zatvoriSoket();
 
+	}
+
+	private String[] srediIzraz(String izraz) {
+		if (operacija.equals(ServerSoket.SABIRANJE))
+			return srediSabiranje(izraz);
+		else if (operacija.equals(ServerSoket.ODUZIMANJE))
+			return srediOduzimanje(izraz);
+		else if (operacija.equals(ServerSoket.MNOZENJE))
+			return srediMnozenje(izraz);
+		else if (operacija.equals(ServerSoket.DELJENJE))
+			return srediDeljenje(izraz);
+		throw new RuntimeException("Otkud ovde rodjace");
+	}
+
+	private String[] srediSabiranje(String izraz) {
+		return izraz.split("+");
+	}
+
+	private String[] srediOduzimanje(String izraz) {
+		return izraz.split("-");
+	}
+
+	private String[] srediMnozenje(String izraz) {
+		return izraz.split("*");
+	}
+
+	private String[] srediDeljenje(String izraz) {
+		return izraz.split("/");
 	}
 
 }
