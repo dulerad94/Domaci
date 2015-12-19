@@ -45,7 +45,7 @@ public class ServerSoket extends Soket implements Runnable {
 				izlazniTok.println("moze");
 				Socket soketZaPodatke = soketZaOsluskivanje.accept();
 				PodaciSoket podaci = new PodaciSoket(soketZaPodatke, komanda);
-				podaci.run();
+				podaci.odradiOperaciju();
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

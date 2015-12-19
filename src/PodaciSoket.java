@@ -3,12 +3,37 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class PodaciSoket extends Soket {
-	String operacija;
-	double brojevi[];
+	private String operacija;
+	private double brojevi[];
+	private double rezultat;
 
 	public PodaciSoket(Socket soket, String operacija) {
 		super(soket);
 		this.operacija = operacija;
+	}
+
+	private boolean ucitajPodatke() {
+		try {
+			String[] podaci = ulazniTok.readLine().split(" ");
+			if (dobarUlaz(podaci)) {
+				ucitajBrojeve(podaci);
+			}else{
+				izlazniTok.println("Molimo vas unesite brojeve");
+				return false;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+
+	}
+
+	private void ucitajBrojeve(String[] podaci) {
+		brojevi = new double[podaci.length];
+		for (int i = 0; i < podaci.length; i++) {
+			brojevi[i] = Double.parseDouble(podaci[i]);
+		}
 	}
 
 	private boolean dobarUlaz(String[] ulaz) {
@@ -21,27 +46,7 @@ public class PodaciSoket extends Soket {
 		return true;
 	}
 
-	private void ucitajPodatke() {
-		try {
-			String[] podaci = ulazniTok.readLine().split(" ");
-			if (dobarUlaz(podaci)) {
-				ucitajBrojeve(podaci);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-	private void ucitajBrojeve(String[] podaci) {
-		brojevi=new double[podaci.length];
-		for (int i = 0; i < podaci.length; i++) {
-			brojevi[i]=Double.parseDouble(podaci[i]);
-		}
-	}
-
-	private double izracunaj() {
+	private boolean izracunaj() {
 		if (operacija.equals(ServerSoket.SABIRANJE))
 			return saberi();
 		else if (operacija.equals(ServerSoket.ODUZIMANJE))
@@ -53,50 +58,47 @@ public class PodaciSoket extends Soket {
 		throw new RuntimeException("Ne znam kako je stigao do ovde");
 	}
 
-	private double saberi() {
-		double rez = 0;
+	private boolean saberi() {
+		rezultat = 0;
 		for (int i = 0; i < brojevi.length; i++) {
-			rez += brojevi[i];
+			rezultat += brojevi[i];
 		}
-		return rez;
+		return true;
 	}
 
-	private double oduzmi() {
-		double rez = brojevi[0];
+	private boolean oduzmi() {
+		rezultat = brojevi[0];
 		for (int i = 1; i < brojevi.length; i++) {
-			rez -=brojevi[i];
+			rezultat -= brojevi[i];
 		}
-		return rez;
+		return true;
 	}
 
-	private double mnozi() {
-		double rez = 1;
+	private boolean mnozi() {
+		rezultat = 1;
 		for (int i = 0; i < brojevi.length; i++) {
-			rez *= brojevi[i];
+			rezultat *= brojevi[i];
 		}
-		return rez;
+		return true;
 	}
 
-	private double podeli() {
-		double rez = brojevi[0];
+	private boolean podeli() {
+		rezultat = brojevi[0];
 		for (int i = 1; i < brojevi.length; i++) {
-			rez /=brojevi[i];
+			if (brojevi[i] == 0) {
+				izlazniTok.println("Ne sme se deliti sa nulom");
+				return false;
+			}
+			rezultat /= brojevi[i];
+
 		}
-		return rez;
+		return true;
 	}
-	public void run() {
-		try {
-			String[] br=ulazniTok.readLine().split(" ");
-			if(dobarUlaz(br)) ucitajBrojeve(br);
-			double rezultat=izracunaj();
-			izlazniTok.println(rezultat+"");		
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally{
-			zatvoriSoket();
-		}
+
+	public void odradiOperaciju() {
+		if(ucitajPodatke()&& izracunaj())
+			izlazniTok.println(rezultat);
+		zatvoriSoket();
 
 	}
 
