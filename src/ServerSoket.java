@@ -30,12 +30,11 @@ public class ServerSoket extends Soket implements Runnable {
 	public void run() {
 		try {
 			while (true) {
-				
-				
 				String  komanda = ulazniTok.readLine();
 				
 				if(KRAJ.equals(komanda)){
 					zatvoriSoket();
+					return;
 				}
 				if (!dozvoljenaOperacija(komanda)){
 								izlazniTok.println("ne moze");
