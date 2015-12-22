@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.LinkedList;
 
 import javax.management.RuntimeErrorException;
 
@@ -116,9 +117,16 @@ public class PodaciSoket extends Soket {
 			return srediDeljenje(izraz);
 		throw new RuntimeException("Otkud ovde rodjace");
 	}
-
+//		Razmisli posle
 	private String[] srediSabiranje(String izraz) {
-		return izraz.split("+");
+		String[] brojevi=new String[0];
+		while(izraz.indexOf('+')!=-1){
+			String broj=izraz.substring(0, izraz.indexOf('+'));
+			String[] noviBrojevi=new String[brojevi.length+1];
+			noviBrojevi[noviBrojevi.length-1]=broj;
+			brojevi=noviBrojevi;
+		}
+		return brojevi;
 	}
 
 	private String[] srediOduzimanje(String izraz) {
