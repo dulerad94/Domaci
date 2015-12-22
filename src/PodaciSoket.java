@@ -117,16 +117,9 @@ public class PodaciSoket extends Soket {
 			return srediDeljenje(izraz);
 		throw new RuntimeException("Otkud ovde rodjace");
 	}
-//		Razmisli posle
+
 	private String[] srediSabiranje(String izraz) {
-		String[] brojevi=new String[0];
-		while(izraz.indexOf('+')!=-1){
-			String broj=izraz.substring(0, izraz.indexOf('+'));
-			String[] noviBrojevi=new String[brojevi.length+1];
-			noviBrojevi[noviBrojevi.length-1]=broj;
-			brojevi=noviBrojevi;
-		}
-		return brojevi;
+		return izraz.split("\\+");
 	}
 
 	private String[] srediOduzimanje(String izraz) {
@@ -134,7 +127,7 @@ public class PodaciSoket extends Soket {
 	}
 
 	private String[] srediMnozenje(String izraz) {
-		return izraz.split("*");
+		return izraz.split("\\*");
 	}
 
 	private String[] srediDeljenje(String izraz) {

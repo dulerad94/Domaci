@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -46,7 +47,11 @@ public class ServerSoket extends Soket implements Runnable {
 				PodaciSoket podaci = new PodaciSoket(soketZaPodatke, komanda);
 				podaci.odradiOperaciju();
 			}
-		} catch (IOException e) {
+		}catch (SocketException e) {
+			// Ovo treba izbrisati pred kraj
+			e.printStackTrace();
+		} 
+		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
