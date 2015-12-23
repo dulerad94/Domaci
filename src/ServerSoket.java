@@ -17,26 +17,25 @@ public class ServerSoket extends Soket implements Runnable {
 	public static final String DELJENJE = "deljenje";
 	public static final String KRAJ="kraj";
 	public static final String[] dozvoljeneVrednosti = { SABIRANJE, ODUZIMANJE, MNOZENJE, DELJENJE };
+	 int id;
 	private Thread t;
 	ServerSocket soketZaOsluskivanje;
 	
-	public ServerSoket(Socket soket,ServerSocket soketZaOsluskivanje) {
+	public ServerSoket(Socket soket,ServerSocket soketZaOsluskivanje,int id) {
 		super(soket);
 		this.soketZaOsluskivanje=soketZaOsluskivanje;
+		this.id=id;
 		t = new Thread(this);
 		t.setDaemon(true);
 		t.start();	
 	}
 
 	@Override
-	public synchronized void run() {
+	public void run() {
 		try {
 			while (true) {
 				String komanda;
-//				synchronized(this){
 				  komanda = ulazniTok.readLine();
-//				  notify();
-//				}
 				if(KRAJ.equals(komanda)){
 					zatvoriSoket();
 					return;
@@ -47,9 +46,10 @@ public class ServerSoket extends Soket implements Runnable {
 				}
 				
 				izlazniTok.println("moze");
-				Socket soketZaPodatke = soketZaOsluskivanje.accept();
-				PodaciSoket podaci = new PodaciSoket(soketZaPodatke, komanda);
-				podaci.odradiOperaciju();
+				izlazniTok.println(String.valueOf(id));
+				String IdOdKlijentaS=ulazniTok.readLine();
+				int IdOdKlijenta=Integer.parseInt(IdOdKlijentaS);
+				MainServer.distribuiraj(IdOdKlijenta, komanda);
 			}
 		}catch (SocketException e) {
 			
@@ -75,5 +75,17 @@ public class ServerSoket extends Soket implements Runnable {
 	public void zatvoriSoket(){
 		super.zatvoriSoket();
 		MainServer.soketi.remove(this);	
+	}
+	public void pokreniPodatke(String komanda){
+		Socket soketZaPodatke;
+		try {
+			soketZaPodatke = soketZaOsluskivanje.accept();
+			PodaciSoket podaci = new PodaciSoket(soketZaPodatke, komanda);
+			podaci.odradiOperaciju();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

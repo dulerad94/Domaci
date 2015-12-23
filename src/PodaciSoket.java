@@ -18,7 +18,6 @@ public class PodaciSoket extends Soket {
 		try {
 			String  izraz;
 			izraz = ulazniTok.readLine();
-			System.out.println(izraz);
 			String[] podaci = srediIzraz(izraz);
 			if (dobarUlaz(podaci)) {
 				ucitajBrojeve(podaci);
@@ -43,7 +42,6 @@ public class PodaciSoket extends Soket {
 
 	private boolean dobarUlaz(String[] ulaz) {
 		for (int i = 0; i < ulaz.length; i++) {
-			System.out.println(ulaz[i]);
 			for (int j = 0; j < ulaz[i].length(); j++) {
 				if (ulaz[i].charAt(j) - 48 < 0 || ulaz[i].charAt(j) - 57 > 0)
 					return false;
