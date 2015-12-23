@@ -19,6 +19,7 @@ public class ServerSoket extends Soket implements Runnable {
 	public static final String[] dozvoljeneVrednosti = { SABIRANJE, ODUZIMANJE, MNOZENJE, DELJENJE };
 	private Thread t;
 	ServerSocket soketZaOsluskivanje;
+	
 	public ServerSoket(Socket soket,ServerSocket soketZaOsluskivanje) {
 		super(soket);
 		this.soketZaOsluskivanje=soketZaOsluskivanje;
@@ -28,11 +29,14 @@ public class ServerSoket extends Soket implements Runnable {
 	}
 
 	@Override
-	public void run() {
+	public synchronized void run() {
 		try {
 			while (true) {
-				String  komanda = ulazniTok.readLine();
-				
+				String komanda;
+//				synchronized(this){
+				  komanda = ulazniTok.readLine();
+//				  notify();
+//				}
 				if(KRAJ.equals(komanda)){
 					zatvoriSoket();
 					return;
