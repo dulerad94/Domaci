@@ -48,13 +48,15 @@ public class ServerSoket extends Soket implements Runnable {
 				podaci.odradiOperaciju();
 			}
 		}catch (SocketException e) {
-			// Ovo treba izbrisati pred kraj
-			e.printStackTrace();
+			
 		} 
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		finally{
+			zatvoriSoket();
+		}
 
 	}
 
@@ -68,6 +70,6 @@ public class ServerSoket extends Soket implements Runnable {
 	
 	public void zatvoriSoket(){
 		super.zatvoriSoket();
-		MainServer.soketi.remove(this);		
+		MainServer.soketi.remove(this);	
 	}
 }
