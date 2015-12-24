@@ -8,62 +8,66 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 public class ServerSoket extends Soket implements Runnable {
-	
-	
-	
+
 	public static final String SABIRANJE = "sabiranje";
 	public static final String ODUZIMANJE = "oduzimanje";
 	public static final String MNOZENJE = "mnozenje";
 	public static final String DELJENJE = "deljenje";
-	public static final String KRAJ="kraj";
+	public static final String KRAJ = "kraj";
 	public static final String[] dozvoljeneVrednosti = { SABIRANJE, ODUZIMANJE, MNOZENJE, DELJENJE };
-	 int id;
+
+	private int id;
+
+	public int getId() {
+		return id;
+	}
+
 	private Thread t;
 	ServerSocket soketZaOsluskivanje;
-	
-	public ServerSoket(Socket soket,ServerSocket soketZaOsluskivanje,int id) {
+
+	public ServerSoket(Socket soket, ServerSocket soketZaOsluskivanje, int id) {
 		super(soket);
-		this.soketZaOsluskivanje=soketZaOsluskivanje;
-		this.id=id;
+		this.soketZaOsluskivanje = soketZaOsluskivanje;
+		this.id = id;
 		t = new Thread(this);
 		t.setDaemon(true);
-		t.start();	
+		t.start();
 	}
 
 	@Override
 	public void run() {
 		try {
 			while (true) {
-				String komanda;
-				  komanda = ulazniTok.readLine();
-				if(KRAJ.equals(komanda)){
+				String komanda = ulazniTok.readLine();
+				if (KRAJ.equals(komanda)) {
 					zatvoriSoket();
 					return;
 				}
-				if (!dozvoljenaOperacija(komanda)){
-								izlazniTok.println("ne moze");
-												continue;
+				if (!dozvoljenaOperacija(komanda)) {
+					izlazniTok.println("ne moze");
+					continue;
 				}
+
+				posaljiPotvrdu();
 				
-				izlazniTok.println("moze");
-				izlazniTok.println(String.valueOf(id));
-				String IdOdKlijentaS=ulazniTok.readLine();
-				int IdOdKlijenta=Integer.parseInt(IdOdKlijentaS);
+				String idOdKlijentaS = ulazniTok.readLine();
+				int IdOdKlijenta = Integer.parseInt(idOdKlijentaS);
 				MainServer.distribuiraj(IdOdKlijenta, komanda);
 			}
-		}catch (SocketException e) {
-			
-		} 
-		catch (IOException e) {
+		} catch (SocketException e) {
+
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		finally{
+		} finally {
 			zatvoriSoket();
 		}
 
 	}
-
+	private void posaljiPotvrdu(){
+		izlazniTok.println("moze");
+		izlazniTok.println(String.valueOf(id));
+	}
 	private boolean dozvoljenaOperacija(String operacija) {
 		for (int i = 0; i < dozvoljeneVrednosti.length; i++) {
 			if (operacija.equals(dozvoljeneVrednosti[i]))
@@ -71,12 +75,13 @@ public class ServerSoket extends Soket implements Runnable {
 		}
 		return false;
 	}
-	
-	public void zatvoriSoket(){
+	@Override
+	public void zatvoriSoket() {
 		super.zatvoriSoket();
-		MainServer.soketi.remove(this);	
+		MainServer.soketi.remove(this);
 	}
-	public void pokreniPodatke(String komanda){
+
+	public void pokreniPodatke(String komanda) {
 		Socket soketZaPodatke;
 		try {
 			soketZaPodatke = soketZaOsluskivanje.accept();
@@ -86,6 +91,6 @@ public class ServerSoket extends Soket implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 }

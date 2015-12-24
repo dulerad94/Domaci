@@ -1,30 +1,30 @@
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.LinkedList;
-
-import javax.management.RuntimeErrorException;
 
 public class PodaciSoket extends Soket {
 	private String operacija;
 	private double brojevi[];
 	private double rezultat;
+
 	public PodaciSoket(Socket soket, String operacija) {
 		super(soket);
 		this.operacija = operacija;
 	}
+	public void odradiOperaciju() {
+		if (ucitajPodatke() && izracunaj())
+			izlazniTok.println(rezultat);
+		zatvoriSoket();
 
+	}
 	private boolean ucitajPodatke() {
 		try {
-			String  izraz;
-			izraz = ulazniTok.readLine();
+			String izraz = ulazniTok.readLine();
 			String[] podaci = srediIzraz(izraz);
-			if (dobarUlaz(podaci)) {
-				ucitajBrojeve(podaci);
-			} else {
+			if (!ucitajBrojeve(podaci)) {
 				izlazniTok.println("Molimo vas unesite brojeve");
 				return false;
 			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -33,18 +33,13 @@ public class PodaciSoket extends Soket {
 
 	}
 
-	private void ucitajBrojeve(String[] podaci) {
+	private boolean ucitajBrojeve(String[] podaci) {
 		brojevi = new double[podaci.length];
 		for (int i = 0; i < podaci.length; i++) {
-			brojevi[i] = Double.parseDouble(podaci[i]);
-		}
-	}
-
-	private boolean dobarUlaz(String[] ulaz) {
-		for (int i = 0; i < ulaz.length; i++) {
-			for (int j = 0; j < ulaz[i].length(); j++) {
-				if (ulaz[i].charAt(j) - 48 < 0 || ulaz[i].charAt(j) - 57 > 0)
-					return false;
+			try {
+				brojevi[i] = Double.parseDouble(podaci[i]);
+			} catch (NumberFormatException e) {
+				return false;
 			}
 		}
 		return true;
@@ -99,12 +94,6 @@ public class PodaciSoket extends Soket {
 		return true;
 	}
 
-	public void odradiOperaciju() {
-		if (ucitajPodatke() && izracunaj())
-			izlazniTok.println(rezultat);
-		zatvoriSoket();
-
-	}
 
 	private String[] srediIzraz(String izraz) {
 		if (operacija.equals(ServerSoket.SABIRANJE))

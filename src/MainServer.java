@@ -26,8 +26,9 @@ public class MainServer {
 
 	public static void distribuiraj(int id, String komanda) {
 		for (int i = 0; i < soketi.size(); i++) {
-			if (id == soketi.get(i).id) {
-				soketi.get(i).pokreniPodatke(komanda);
+			ServerSoket s=soketi.get(i);
+			if (id == s.getId()) {
+				s.pokreniPodatke(komanda);
 			}
 
 		}
